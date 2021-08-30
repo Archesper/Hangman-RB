@@ -22,6 +22,17 @@ module Display
     end
   end
 
+  def request_user_input
+    'Input your letter guess or \'save\' if you want to save this game and continue later.'
+  end
+
+  def print_turn_info
+    puts request_user_input
+    puts display_word
+    puts previous_guesses unless @wrong_guessed_letters.empty?
+    puts incorrect_guesses_left
+  end
+
   def previous_guesses
     "Wrong letters you have previously guessed: \e[31m#{@wrong_guessed_letters}\e[0m"
   end
@@ -48,5 +59,17 @@ module Display
 
   def victory_message
     "\e[32;1mYou guessed the word: \e[4m#{@secret_word}\e[m\e[m"
+  end
+
+  def save_game_message
+    'Input a name for your saved game:'
+  end
+
+  def game_already_exists
+    "\e[33mThere is already a saved game with this name, please pick another\e[m"
+  end
+
+  def game_saved_successfully
+    "\e[92mGame saved successfully!\e[m"
   end
 end
