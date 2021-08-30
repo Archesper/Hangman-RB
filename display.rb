@@ -42,7 +42,7 @@ module Display
   end
 
   def invalid_input_message
-    "\e[33mPlease input a valid letter.\e[m"
+    "\e[33mInvalid input.\e[m"
   end
 
   def correct_guess_message(guess)
@@ -71,5 +71,23 @@ module Display
 
   def game_saved_successfully
     "\e[92mGame saved successfully!\e[m"
+  end
+
+  def no_saved_games_message
+    "\e[93mThere are no saved games!\e[m"
+  end
+
+  def display_saved_games(list)
+    list.each_with_index { |game, index| puts "\e[34m#{index + 1}\e[m: #{game}" }
+  end
+
+  def request_game_id
+    "\e[94;1mInput the ID of the game which you want to load:\e[m"
+  end
+
+  def print_instructions
+    puts "\e[94;1mWould you like to play a new game or load a saved one?\e[m"
+    puts "\e[34m1:\e[m New Game"
+    puts "\e[34m2:\e[m Load Saved Game"
   end
 end

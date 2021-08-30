@@ -11,17 +11,16 @@ class Game
   include Display
   include Serialization
 
-  def initialize(secret_word)
-    @save_dir = 'Saved Games'
-    @secret_word = secret_word
+  def initialize
+    @secret_word = random_word
     @correct_letters = @secret_word.split('').map(&:downcase)
     @guess_count = 0
     @correct_guessed_letters = []
     @wrong_guessed_letters = []
   end
 
-  def play
-    puts display_word_length
+  def play(saved: false)
+    puts display_word_length unless saved
     until game_over? || game_solved?
       print_turn_info
       guess = player_guess
@@ -34,7 +33,23 @@ class Game
     puts @guess_count == 10 ? failure_message : victory_message
   end
 
+  def new_or_saved
+    print_instructions
+    option = gets.chomp
+    until %w[1 2].include? option
+      puts invalid_input_message
+      option = gets.chomp
+    end
+    play if option == '1'
+    load if option == '2'
+  end
+
   private
+
+  def random_word
+    dictionary = File.open('5desk.txt').readlines.map(&:chomp)
+    dictionary.select { |word| word.length.between?(5, 12) }.sample
+  end
 
   def player_guess
     guess = gets.chomp.downcase
@@ -78,5 +93,25 @@ class Game
     end
     save_game(filename)
     puts game_saved_successfully
+  end
+
+  def load
+    if Dir.exist? SAVE_DIR
+      saved_games = Dir.children(SAVE_DIR)
+      puts request_game_id
+      display_saved_games(saved_games)
+      game_id = gets.chomp.to_i
+      until game_id.between?(1, saved_games.length)
+        puts invalid_input_message
+        game_id = gets.chomp.to_i
+      end
+      game_path = "#{SAVE_DIR}/#{saved_games[game_id - 1]}"
+      load_yaml(File.read(game_path))
+      File.delete game_path
+      play(saved: true)
+    else
+      puts no_saved_games_message
+      new_or_saved
+    end
   end
 end

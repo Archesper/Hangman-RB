@@ -13,6 +13,15 @@ module Serialization
               })
   end
 
+  def load_yaml(string)
+    game_data = YAML.load string
+    @secret_word = game_data[:secret_word]
+    @correct_letters = game_data[:correct_letters]
+    @guess_count = game_data[:guess_count]
+    @correct_guessed_letters = game_data[:correct_guessed_letters]
+    @wrong_guessed_letters = game_data[:wrong_guessed_letters]
+  end
+
   def save_game(filename)
     File.open("#{SAVE_DIR}/#{filename}.yaml", 'w') { |file| file.print to_yaml }
   end
