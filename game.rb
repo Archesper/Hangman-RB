@@ -96,7 +96,7 @@ class Game
   end
 
   def load
-    if Dir.exist? SAVE_DIR
+    if Dir.exist?(SAVE_DIR) && !Dir.empty?(SAVE_DIR)
       saved_games = Dir.children(SAVE_DIR)
       puts request_game_id
       display_saved_games(saved_games)
